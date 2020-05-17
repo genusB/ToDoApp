@@ -1,0 +1,73 @@
+<Window x:Class="ToDo.ToDoItemWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:ToDo"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Height="420" Width="600" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" WindowStyle="SingleBorderWindow" ShowInTaskbar="False">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*" />
+            <ColumnDefinition Width="400*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Background="#FFF6F6F6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" FontFamily="Candara" />
+                <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
+                         Margin="0 10 0 0" SelectionChanged="TagsListBox_OnSelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Text}" Foreground="{Binding TagTextColor}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                    <materialDesign:Badged Content="Badged" Height="100" Width="100"/>
+                </ListBox>
+            </StackPanel>
+            <Button Grid.Row="1" Name="EditButton" Content="Edit tag" HorizontalAlignment="Center" Width="150"
+                    Margin="0 5" Visibility="Collapsed"
+                    Click="EditButton_OnClick" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Candara" />
+            <Button Grid.Row="2" Name="DeleteButton" Content="Delete tag" HorizontalAlignment="Center" Width="150"
+                    Margin="0 5" Visibility="Collapsed"
+                    Click="DeleteTagButton_OnClick" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Candara" />
+            <Button Content="Add tag" HorizontalAlignment="Center" Width="150" Margin="24,298,23.6,7.6"
+                    Click="AddTagButton_OnCLick" FontFamily="Candara" Background="White" BorderBrush="Black" Foreground="Black" />
+            <Button Grid.Row="4" Name="SharedTagButton" Content="Add shared tag" HorizontalAlignment="Center"
+                    Margin="0 5" Width="150" Click="AddSharedTagButton_OnClick" Visibility="Collapsed"
+                    ToolTip="Shared tags will be visible for all members of the project" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Candara" />
+        </Grid>
+        <StackPanel Grid.Column="1">
+            <TextBox Name="HeaderText" Margin="5" FontSize="14"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     materialDesign:HintAssist.Hint="Header" FontFamily="Candara Light" TextChanged="HeaderText_TextChanged" />
+            <TextBox Name="NotesText" Margin="5" FontSize="14"
+                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     materialDesign:HintAssist.Hint="Notes" FontFamily="Candara Light" />
+            <Label Content="Date" FontSize="17" Margin="5" Height="30" FontFamily="Candara Light" />
+            <DatePicker Name="PickedDate" Margin="5" Height="30" Focusable="False"
+                        ToolTip="To unselect date, hold Ctrl and click on selected date" FontFamily="Candara" >
+                <DatePicker.Background>
+                    <SolidColorBrush Color="White"/>
+                </DatePicker.Background>
+            </DatePicker>
+            <Label Content="Deadline" FontSize="17" Margin="5" Height="30" FontFamily="Candara Light" />
+            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Focusable="False"
+                        ToolTip="To unselect deadline date, hold Ctrl and click on selected date" FontFamily="Candara" />
+            <Button Content="Save" FontSize="16" Height="32" Click="Save_OnClick"
+                    Margin="10" FontFamily="Candara" Background="White" BorderBrush="Black" Foreground="Black" />
+            <Button Content="Delete" FontSize="16" Height="32" Click="DeleteTaskButton_OnClick"
+                    Margin="10" FontFamily="Candara" Background="White" BorderBrush="Black" Foreground="Black" />
+
+        </StackPanel>
+
+    </Grid>
+</Window>

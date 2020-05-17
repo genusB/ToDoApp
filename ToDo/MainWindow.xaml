@@ -1,0 +1,144 @@
+﻿<Window x:Class="ToDo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ToDo"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="ToDo" Height="900" Width="1600" WindowState="Maximized" Closed="MainWindow_OnClosed">
+    <Window.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+        <Style x:Key="ImageStyle" TargetType="Image">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Background="#F4F6F8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="5 20 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ComboBox Name="SearchConditionsComboBox" Width="150" HorizontalAlignment="Left" Margin="5 0 0 0"
+                          materialDesign:HintAssist.Hint="Search in..."
+                          SelectionChanged="SearchConditionsComboBox_OnSelectionChanged" FontFamily="Candra Light">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
+                                          Checked="ConditionCheckBox_OnChecked"
+                                          Unchecked="ConditionCheckBox_OnUnchecked" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Canvas HorizontalAlignment="Left" Margin="5 8 0 0">
+                        <TextBox Name="SearchTextBox" Width="150"
+                                 materialDesign:HintAssist.Hint="Tags (separate by space)"
+                                 Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" FontFamily="Candra Light" />
+                        <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick"
+                                ToolTip="Find tasks by their tags" IsDefault="True" FontFamily="Candara" Background="White" BorderBrush="Black" Foreground="Black" />
+                    </Canvas>
+                    <Expander Name="SearchExpander" MaxWidth="88" Margin="245 0 0 0" Background="#F4F6F8">
+                        <ListBox Name="FoundToDoItems" MaxWidth="88"
+                                 SelectionChanged="FoundToDoItems_OnSelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTip="{Binding Header}">
+                                        <TextBlock Text="{Binding Header}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                </StackPanel>
+            </Grid>
+            <ListView Grid.Row="1" Name="ProjectsListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
+                      SelectionChanged="PagesListView_OnSelectionChanged">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Image Source="{Binding ImageSource}" Style="{StaticResource ImageStyle}" />
+                            <TextBlock Text="{Binding Name}" Style="{StaticResource TextBlockStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <StackPanel Grid.Row="2" Margin="0 20 0 20">
+                <StackPanel Name="NewProjectStackPanel" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <TextBox Name="ProjectNameTextBox" materialDesign:HintAssist.Hint="Project name" FontSize="15" CaretBrush="Black" SelectionBrush="White" FontFamily="Candara" />
+                    <TextBox Name="InvitedUsersTextBox" Margin="0 10" FontSize="15"
+                             materialDesign:HintAssist.Hint="Invited user logins (separate by space)" CaretBrush="Black" SelectionBrush="White" FontFamily="Candara" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Confirm" Click="ConfirmButton_OnClick" Width="120" FontFamily="Candara" Background="White" BorderBrush="Black" Foreground="Black" />
+                        <Button Content="Cancel" Click="CancelButton_OnClick" Margin="10 0 0 0" Width="120" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Candara" />
+                    </StackPanel>
+                </StackPanel>
+                <Button Name="AddProjectButton" Content="Add shared project" HorizontalAlignment="Center"
+                        Click="AddSharedProjectButton_OnClick" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Can" />
+                <ListView Name="InvitationsListView" Margin="30 20" Visibility="Collapsed">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Foreground="Black" FontFamily="Candara">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} has invited you to the project {1}">
+                                            <Binding Path="InviterName" />
+                                            <Binding Path="ProjectName" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                                    <Button Content="Accept" Margin="0 0 0 5" Click="AcceptButton_OnClick" Background="White" BorderBrush="Black" FontFamily="Candara" />
+                                    <Button Content="Decline" Margin="15 0 0 5" Click="DeclineButton_OnClick" BorderBrush="Black" Foreground="Black" Background="White" FontFamily="Candara" />
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Focusable" Value="false" />
+                            <Setter Property="Background" Value="Transwindow" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </StackPanel>
+        </Grid>
+        <GridSplitter Grid.Column="0" Width="3" Background="#F4F6F8" />
+        <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
+            <Grid DockPanel.Dock="Top">
+                <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5" Click="LogOutButton_OnClick" Background="White" BorderBrush="Black" Foreground="Black" FontFamily="Can" />
+                <Button HorizontalAlignment="Left" Margin="10,20,0,4.8" ToolTip="Refresh"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Click="RefreshButton_OnClick" Background="{x:Null}" BorderBrush="Black" Foreground="Black">
+                    <Grid>
+                        <Image Width="22" Height="22" Source="Resources/refresh.png" />
+                    </Grid>
+                </Button>
+            </Grid>
+            <Frame Name="PagesFrame" NavigationUIVisibility="Hidden"
+                   Background="{DynamicResource MaterialDesignPaper}" />
+        </DockPanel>
+    </Grid>
+</Window>
